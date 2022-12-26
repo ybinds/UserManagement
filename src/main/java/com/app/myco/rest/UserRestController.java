@@ -26,7 +26,7 @@ public class UserRestController {
 		return ResponseEntity.ok(service.checkUserExists(email));
 	}
 	
-	@PostMapping("/create")
+	@PostMapping("/register")
 	public ResponseEntity<String> createUser(
 			@RequestBody User user){
 		return ResponseEntity.ok(service.createUser(user));
