@@ -42,6 +42,7 @@ public class UserServiceImpl implements IUserService {
 		// for now just a test string
 		String password = "test"; 
 		user.setUserPassword(password);
+		user.setIsLocked(true);
 		repo.save(user);
 		
 		//logic to send email
