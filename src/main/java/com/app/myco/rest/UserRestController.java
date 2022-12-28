@@ -1,5 +1,7 @@
 package com.app.myco.rest;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.myco.binding.LoginReq;
 import com.app.myco.binding.UnlockRequest;
 import com.app.myco.entities.User;
 import com.app.myco.exception.UserNotFoundException;
@@ -21,6 +24,24 @@ public class UserRestController {
 	@Autowired
 	private IUserService service;
 	
+	@PostMapping("/login")
+	public ResponseEntity<String> userLogin(
+			@RequestBody LoginReq req,
+			HttpSession session
+			) {
+		String msg = service.userLogin(req);
+		if(msg.equals("success")) {
+			session.setAttribute("user", req.getEmail());
+		}
+		return ResponseEntity.ok(msg);
+	}
+	
+	@GetMapping("/logout")
+	public ResponseEntity<String> userLogout(HttpSession session){
+		session.invalidate();
+		return ResponseEntity.ok("");
+	}
+	
 	@GetMapping("/checkDuplicate/{email}")
 	public ResponseEntity<String> checkDuplicateUser(@PathVariable("email") String email){
 		return ResponseEntity.ok(service.checkUserExists(email));
@@ -29,6 +50,7 @@ public class UserRestController {
 	@PostMapping("/register")
 	public ResponseEntity<String> createUser(
 			@RequestBody User user){
+		System.out.println(user);
 		return ResponseEntity.ok(service.createUser(user));
 	}
 	
@@ -45,7 +67,7 @@ public class UserRestController {
 		return response;
 	}
 	
-	@GetMapping("/getPassword/{email}")
+	@GetMapping("/forgotPassword/{email}")
 	public ResponseEntity<String> forgotPassword(
 			@PathVariable("email") String email){
 		service.forgotPassword(email);

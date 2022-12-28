@@ -1,51 +1,80 @@
 package com.app.myco.service;
 
 import java.util.Optional;
+import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.app.myco.binding.EmailReq;
+import com.app.myco.binding.LoginReq;
 import com.app.myco.binding.UnlockRequest;
 import com.app.myco.entities.User;
 import com.app.myco.exception.UserNotFoundException;
 import com.app.myco.repositories.UserRepository;
+import com.app.myco.util.EmailUtil;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
+	@Autowired
 	private UserRepository repo;
 	
+	@Autowired
+	private EmailUtil eutil;
+	
 	public User getUserByEmail(String email) {
-		if(email.isEmpty() || email == null || !repo.existsById(email))
-			throw new UserNotFoundException("EMAIL '"+ email +"' DOES NOT EXIST");
-		else
-			return repo.findByUserEmail(email);
+		User u = null;
+		if(!email.isEmpty() && email != null) {
+			u = repo.findByUserEmail(email);
+			if(u == null)
+				throw new UserNotFoundException("EMAIL '"+ email +"' DOES NOT EXIST");
+		} else
+			throw new UserNotFoundException("EMAIL CANNOT BE NULL/EMPTY");
+		return u;
 	}
 
 	public String checkUserExists(String email) {
-		if(email.isEmpty() || email == null) {
+		String msg = "";
+		if(email.isEmpty() || email == null) 
+			msg = "Email cannot be empty";
+		else {
 			User user = new User();
 			user.setUserEmail(email);
-			Example<User> example = Example.of(user); 
+			Example<User> example = Example.of(user);
 			if(repo.exists(example) == false) {
-				return "Email is available";
+				msg = "Email is available";
 			} else
-				return "Email is already in use";
+				msg = "Email is already in use";
 		}
-		else
-			return "Email cannot be empty";
+		return msg;
 	}
 	
 	public String createUser(User user) {
 		
 		// logic to generate random password
 		// for now just a test string
-		String password = "test"; 
+		String password = generateRandomPassword(); 
 		user.setUserPassword(password);
 		user.setIsLocked(true);
+		System.out.println(user);
 		repo.save(user);
 		
 		//logic to send email
+		EmailReq req = new EmailReq();
+		req.setEmailFrom("noreply@myuserm.com");
+		req.setEmailTo(user.getUserEmail());
+		req.setEmailSubject("Registration Email");
+		req.setEmailText(
+					"Dear "+ user.getUserFirstName() + ",\nWelcome to My User Management.\nThank you,\nTeam"
+				);
+		try {
+			eutil.sendEmail(req);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return "User created successfully";
 	}
 
@@ -64,8 +93,62 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	public void forgotPassword(String email) {
-		User user = getUserByEmail(email);
-		// logic to send email to user
+		String pwd = repo.getUserPasswordByEmail(email);
+		System.out.println(pwd);
+
+		//logic to send email
+		EmailReq req = new EmailReq();
+		req.setEmailFrom("noreply@myuserm.com");
+		req.setEmailTo(email);
+		req.setEmailSubject("Forgot Password Email");
+		req.setEmailText(
+					"Dear "+ email + ",\nHere is your Password " + pwd + ".\nThank you,\nTeam"
+				);
+		try {
+			eutil.sendEmail(req);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
+	
+	// method to generate Random password with length 10 characters and Alphanumeric String
+	public String generateRandomPassword() {
+	    int leftLimit = 48; // numeral '0'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 10;
+	    Random random = new Random();
+
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+
+	    //Without Java 8 Streams
+/*	    StringBuilder sb = new StringBuilder(targetStringLength);
+	    
+	    for(int i=0; sb.length() < targetStringLength; i++) {
+	    	int randomInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit+1));
+	    	if((randomInt <= 57 || randomInt >= 65) && (randomInt <=90 || randomInt >= 97)) 
+	    		sb.appendCodePoint(randomInt);
+	    }*/
+
+	    return generatedString;
+	}
+
+	public String userLogin(LoginReq req) {
+		String msg = "";
+		Optional<User> user = repo.findByUserEmailAndUserPassword(req.getEmail(), req.getPassword());
+		if(!user.isPresent()) {
+			msg = "Invalid Credentials";
+		}else if(user.get().getIsLocked()) {
+			msg = "Your account is locked";
+		} else {
+			msg = "success";
+		}
+		return msg;
+	}
+
 
 }

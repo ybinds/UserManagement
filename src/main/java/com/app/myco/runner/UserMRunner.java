@@ -14,7 +14,7 @@ import com.app.myco.repositories.CityRepository;
 import com.app.myco.repositories.CountryRepository;
 import com.app.myco.repositories.StateRepository;
 
-//@Component
+@Component
 public class UserMRunner implements CommandLineRunner{
 
 	@Autowired
