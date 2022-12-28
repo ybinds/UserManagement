@@ -52,11 +52,15 @@ public class UserServiceImpl implements IUserService {
 		
 		//logic to send email
 		EmailReq req = new EmailReq();
-		req.setEmailFrom("noreply@myuserm.com");
+		req.setEmailFrom("noreply@ies.com");
 		req.setEmailTo(user.getUserEmail());
-		req.setEmailSubject("Registration Email");
+		req.setEmailSubject("Unlock IES Account");
 		req.setEmailText(
-					"Dear "+ user.getUserFirstName() + ",\nWelcome to My User Management.\nThank you,\nTeam"
+					"Hi "+ user.getUserFirstName() + ", " + user.getUserLastName()+ ":\n"
+							+ "Welcome to IES family, your registration is almost complete.\n"
+							+ "Please unlock your account using below details.\n"
+							+ "Temporary Password:" + password
+							+ "\n <a href='http://localhost:4200/unlock/"+user.getUserEmail()+"'>Link to unlock account</a>Thank you,\nTeam"
 				);
 		try {
 			eutil.sendEmail(req);
