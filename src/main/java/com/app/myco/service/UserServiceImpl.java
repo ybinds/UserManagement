@@ -24,17 +24,6 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private EmailUtil eutil;
 	
-	public User getUserByEmail(String email) {
-		User u = null;
-		if(!email.isEmpty() && email != null) {
-			u = repo.findByUserEmail(email);
-			if(u == null)
-				throw new UserNotFoundException("EMAIL '"+ email +"' DOES NOT EXIST");
-		} else
-			throw new UserNotFoundException("EMAIL CANNOT BE NULL/EMPTY");
-		return u;
-	}
-
 	public String checkUserExists(String email) {
 		String msg = "";
 		if(email.isEmpty() || email == null) 

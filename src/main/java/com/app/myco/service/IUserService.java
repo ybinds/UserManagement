@@ -6,7 +6,6 @@ import com.app.myco.entities.User;
 
 public interface IUserService {
 
-	User getUserByEmail(String email);
 	String checkUserExists(String email);
 	String createUser(User user);
 	String unlockUser(UnlockRequest request);
