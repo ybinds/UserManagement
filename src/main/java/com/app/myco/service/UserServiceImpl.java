@@ -73,6 +73,7 @@ public class UserServiceImpl implements IUserService {
 
 	public String unlockUser(UnlockRequest request) {
 		// logic to test if the user email and password match
+		System.out.println(request);
 		Optional<User> user = repo.findByUserEmailAndUserPassword(request.getEmail(), request.getOldPassword());
 		if(user.isPresent()) {
 			User u = user.get();
@@ -82,7 +83,7 @@ public class UserServiceImpl implements IUserService {
 		}else {
 			throw new UserNotFoundException("User not found. Email and Password does not match.");
 		}
-		return "User unlocked successfully";
+		return "Account unlocked, please proceed with login";
 	}
 
 	public void forgotPassword(String email) {

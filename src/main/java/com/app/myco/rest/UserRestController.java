@@ -3,7 +3,9 @@ package com.app.myco.rest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import com.app.myco.exception.UserNotFoundException;
 import com.app.myco.service.IUserService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserRestController {
 
@@ -32,6 +35,7 @@ public class UserRestController {
 		String msg = service.userLogin(req);
 		if(msg.equals("success")) {
 			session.setAttribute("user", req.getEmail());
+			msg = "Welcome to Ashok IT....";
 		}
 		return ResponseEntity.ok(msg);
 	}
@@ -50,8 +54,7 @@ public class UserRestController {
 	@PostMapping("/register")
 	public ResponseEntity<String> createUser(
 			@RequestBody User user){
-		System.out.println(user);
-		return ResponseEntity.ok(service.createUser(user));
+		return new ResponseEntity<String>(service.createUser(user), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/unlock")
