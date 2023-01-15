@@ -1,8 +1,8 @@
 package com.app.myco.service;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IStateService {
 
-	List<Object[]> getCitiesByState(Integer id);
+	Map<Integer, String> getCitiesByState(Integer id);
 }

@@ -1,7 +1,9 @@
 package com.app.myco.rest;
 
-import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,21 +23,30 @@ public class CountryRestController {
 	@Autowired
 	private ICountryService service;
 	
+	private static final Logger logger = LoggerFactory.getLogger(CountryRestController.class);
+	
 	@GetMapping("/list")
-	public ResponseEntity<List<Object[]>> getAllCountries(){
+	public ResponseEntity<Map<Integer, String>> getAllCountries(){
 		return ResponseEntity.ok(service.getAllCountries());
 	}
 	
 	@GetMapping("/states/{id}")
-	public ResponseEntity<List<Object[]>> getStatesByCountry(
+	public ResponseEntity<Map<Integer, String>> getStatesByCountry(
 			@PathVariable("id") Integer id){
-		ResponseEntity<List<Object[]>> response = null;
+		logger.debug("entering states list endpoint");
+		ResponseEntity<Map<Integer, String>> response = null;
 		try {
-			response = ResponseEntity.ok(service.getStatesByCountry(id));
+			Map<Integer,String> map = service.getStatesByCountry(id);
+			if(map.size()==0) {
+				logger.warn("Received 0 results from states list by country " + id);
+			}
+			response = ResponseEntity.ok(map);
 		} catch(CountryNotFoundException cnfe) {
+			logger.error("Error occurred in states list endpoint "+ cnfe.getMessage());
 			cnfe.printStackTrace();
 			throw cnfe;
 		}
+		logger.debug("exiting states list endpoint");
 		return response;
 	}
 }

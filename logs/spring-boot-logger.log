@@ -1,0 +1,12 @@
+2023-01-14 22:46:31,099 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting UserManagementApplication using Java 11.0.17 on LAPTOP-3H8NAP6H with PID 1524 (J:\WorkSpace_JRTP\UserManagement\target\classes started by sabbu in J:\WorkSpace_JRTP\UserManagement)
+2023-01-14 22:46:31,101 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2023-01-14 22:46:31,824 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started UserManagementApplication in 0.764 seconds (JVM running for 228.252)
+2023-01-14 22:46:42,201 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting UserManagementApplication using Java 11.0.17 on LAPTOP-3H8NAP6H with PID 30696 (J:\WorkSpace_JRTP\UserManagement\target\classes started by sabbu in J:\WorkSpace_JRTP\UserManagement)
+2023-01-14 22:46:42,211 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2023-01-14 22:46:47,331 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started UserManagementApplication in 5.516 seconds (JVM running for 6.723)
+2023-01-14 22:46:50,703 INFO com.app.myco.service.CountryServiceImpl [http-nio-8080-exec-1] getStatesByCountry() - service method start
+2023-01-14 22:46:50,734 INFO com.app.myco.service.CountryServiceImpl [http-nio-8080-exec-1] getStatesByCountry() - service method end
+2023-01-14 22:46:55,255 INFO com.app.myco.service.CountryServiceImpl [http-nio-8080-exec-2] getStatesByCountry() - service method start
+2023-01-14 22:46:55,266 ERROR com.app.myco.rest.CountryRestController [http-nio-8080-exec-2] Error occurred in states list endpoint COUNTRY WITH '10' NOT FOUND
+2023-01-14 22:47:00,358 INFO com.app.myco.service.CountryServiceImpl [http-nio-8080-exec-4] getStatesByCountry() - service method start
+2023-01-14 22:47:00,372 INFO com.app.myco.service.CountryServiceImpl [http-nio-8080-exec-4] getStatesByCountry() - service method end

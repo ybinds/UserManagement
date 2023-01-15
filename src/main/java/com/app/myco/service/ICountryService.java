@@ -1,9 +1,9 @@
 package com.app.myco.service;
 
-import java.util.List;
+import java.util.Map;
 
 public interface ICountryService {
 
-	List<Object[]> getAllCountries();
-	List<Object[]> getStatesByCountry(Integer id);
+	Map<Integer, String> getAllCountries();
+	Map<Integer, String> getStatesByCountry(Integer id);
 }

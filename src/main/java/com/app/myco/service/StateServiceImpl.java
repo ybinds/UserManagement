@@ -1,6 +1,7 @@
 package com.app.myco.service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,13 @@ public class StateServiceImpl implements IStateService {
 	@Autowired
 	private StateRepository repo;
 	
-	public List<Object[]> getCitiesByState(Integer id) {
+	public Map<Integer, String> getCitiesByState(Integer id) {
+		Map<Integer, String> map = new HashMap<>();
 		if(id==null || !repo.existsById(id))
 			throw new StateNotFoundException("STATE WITH '"+ id + "' NOT FOUND");
 		else
-			return repo.getCitiesByState(id);
+			repo.getCitiesByState(id).forEach(obj -> map.put(Integer.parseInt(obj[0].toString()), obj[1].toString()));
+			return map;
 	}
 
 }

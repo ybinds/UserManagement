@@ -1,6 +1,6 @@
 package com.app.myco.rest;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,9 @@ public class StateRestController {
 	private IStateService service;
 	
 	@GetMapping("/cities/{id}")
-	public ResponseEntity<List<Object[]>> getCitiesByState(
+	public ResponseEntity<Map<Integer, String>> getCitiesByState(
 			@PathVariable("id") Integer id){
-		ResponseEntity<List<Object[]>> response = null;
+		ResponseEntity<Map<Integer, String>> response = null;
 		try {
 			response = ResponseEntity.ok(service.getCitiesByState(id));
 		} catch(StateNotFoundException snfe) {
